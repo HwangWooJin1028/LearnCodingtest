@@ -24,10 +24,23 @@ arr	answer
 
 public class ThreeQnAnswer {
 
+    public int[] Tsolution(int[] arr) {
+        List<Integer> list = new LinkedList<>();
+
+        int last = -1;
+        for(int a : arr) {
+             if(last == a) continue;
+             last = a;
+             list.add(a);
+         }
+
+        return list.stream().mapToInt(Integer::intValue).toArray();
+    }
+
     public int[] mySolution(int[] arr) {
         List<Integer> answer = new ArrayList<>();
         int index = 0;
-        for(int i = 0; i<arr.length; i++) { // 1
+        for(int i = 0; i<arr.length; i++) {
             if(i == 0) {
                 answer.add(arr[i]);
                 continue;
