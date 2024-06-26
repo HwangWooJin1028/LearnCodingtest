@@ -1,5 +1,6 @@
 # LearnCodingtest
-코딩테스트 문제 풀이 업로드.
+&nbsp;코딩테스트 문제 풀이 업로드.<br/>
+&nbsp;[<img src="https://img.shields.io/badge/Programmers 강의 링크-000000.svg?style=for-the-badge">](https://school.programmers.co.kr/learn/courses/13577/13577-java-어서와-자료구조-알고리즘은-처음이지)
 <br/> <br/> <br/> 
 # 1일차 - 2일차
 <br/> 
