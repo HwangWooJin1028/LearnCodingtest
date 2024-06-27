@@ -14,11 +14,73 @@ import java.util.*;
 제한 사항
 작업의 개수(progresses, speeds 배열의 길이)는 100개 이하입니다.
 작업 진도는 100 미만의 자연수입니다.
-작업 속도는 100 이하의 자연수입니다.
+작업 속도는 100 이하의 자연수입니다. 7 3 9
 배포는 하루에 한 번만 할 수 있으며, 하루의 끝에 이루어진다고 가정합니다. 예를 들어 진도율이 95%인 작업의 개발 속도가 하루에 4%라면 배포는 2일 뒤에 이루어집니다.
 */
 public class TwoQnAnswer {
-    public int[] mySolution(int[] progresses, int[] speeds) {
+
+    public int[] Tsolution01(int[] progresses, int[] speeds) {
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 0; i < progresses.length; i++) {
+            float p  = progresses[i];
+            float s = speeds[i];
+            int days = (int)Math.ceil((100 - p) / s);
+            queue.offer(days);
+        }
+        Queue<Integer> answer = new LinkedList<>();
+        int d = queue.poll();
+        int count = 1;
+        while(!queue.isEmpty()) {
+            int n = queue.poll();
+            if(d >= n) {
+                count++;
+                d = n;
+                continue;
+            }
+            answer.offer(count);
+            count = 1;
+            d = n;
+        }
+        answer.offer(count);
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public int[] mySolution03(int[] progresses, int[] speeds) {
+        List<Integer> returnList = new LinkedList<>();
+        Queue<Integer> queue = new LinkedList<>();
+        int date = 0;
+        queue.offer((int)Math.ceil((double)(100-progresses[0])/speeds[0]));
+        for(int i=0; i<progresses.length; i++) {
+            queue.offer((int)Math.ceil((double)(100-progresses[i])/speeds[i]));
+            if(queue.poll() >= queue.peek()) date++;
+            else {
+                returnList.add(date);
+                date = 1;
+            }
+        }
+        returnList.add(date);
+        return returnList.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public int[] mySolution02(int[] progresses, int[] speeds) {
+        // 1. 각 프로세스의 작업 기간 구하기
+        List<Integer> returnList = new LinkedList<>();
+        List<Integer> resultList = new LinkedList<>();
+        int date = 0;
+        resultList.add((int)Math.ceil((double)(100-progresses[0])/speeds[0]));
+        for(int i=0; i<progresses.length; i++) {
+            resultList.add((int)Math.ceil((double)(100-progresses[i])/speeds[i]));
+            if(resultList.get(resultList.size()-1) <= resultList.get(resultList.size()-2)) date++;
+            else if(resultList.get(resultList.size()-1) > resultList.get(resultList.size()-2)) {
+                returnList.add(date);
+                date = 1;
+            }
+        }
+        returnList.add(date);
+        return returnList.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public int[] mySolution01(int[] progresses, int[] speeds) {
         Queue<Integer> result = new LinkedList<>();
         List<Integer> returnList = new LinkedList<>();
 
