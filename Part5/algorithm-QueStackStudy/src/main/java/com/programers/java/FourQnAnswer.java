@@ -19,15 +19,120 @@ import java.util.stream.Collectors;
 해당 프로세스가 몇 번째로 실행되는지 return 하도록 solution 함수를 작성해주세요
 */
 public class FourQnAnswer {
+    class Paper {
+        boolean isMine;
+        int priority;
+        Paper(boolean isMine, int priority) {
+            this.isMine = isMine;
+            this.priority = priority;
+        }
+    }
+
+    public int Tsolution01(int[] priorities, int location) {
+        int answer = 0;
+        List<Paper> papers = new ArrayList<>();
+        for(int i=0;i<priorities.length;i++) {
+            // 만약, 해당하는 값이 내가 알고싶은 것이면 true를 설정한다.
+            papers.add(new Paper(i == location, priorities[i]));
+        }
+
+        while(!papers.isEmpty()) {
+            Paper now = papers.remove(0);
+            boolean printable = false;
+            for(Paper p : papers) {
+                // 만약, 현재 우선순위가 높은 것이 리스트 내부에 존재한다면
+                if(p.priority > now.priority) {
+                    printable = false; // false를 반환
+                    break;
+                }
+            }
+
+            // 만약 현재 우선순위가 높은 것이 리스트 내부에 존재한다면
+            if(!printable) {
+                papers.add(now); // queue에 데이터를 넣는다.
+                continue;
+            }
+
+            answer++;
+            if(now.isMine) return answer; // 만약 now가 isMine이면 return한다.
+        }
+
+        return answer;
+    }
+
+    public int mySolution04(int[] priorities, int location) {
+        int answer = 1;
+        Queue<Character> que = new LinkedList<>();
+        for(int i = 0; i < priorities.length; i++){
+            int charint = 'A'+i;
+            que.offer((char)charint);
+        }
+
+        for(int i = 0; i < priorities.length; i++){
+            char process = que.poll();
+            for(int j=0; j<que.size(); j++) {
+                char compare = que.poll();
+                if(priorities[i] == priorities[j]) {
+                    que.offer(process);
+                    que.offer(compare);
+                    break;
+                }
+                else if(priorities[i] > priorities[j]) {
+                    que.offer(compare);
+                }
+            }
+        }
+
+        System.out.println(que);
+
+        return 'A' + location;
+    }
+
+    public int mySolution03(int[] priorities, int location) {
+        int answer = 1;
+
+        for(int i=0; i<priorities.length; i++){
+            for(int j=0; j<priorities.length; j++) {
+                if(i==j) continue;
+                if(priorities[i] > priorities[j]) answer++;
+                else if(priorities[i] == priorities[j] && i<j) answer++;
+            }
+            if((i+1) == location){
+                break;
+            } else {
+                answer = 1;
+            }
+        }
+
+        return answer;
+    }
+
+    public int mySolution02(int[] priorities, int location) {
+        int answer = 0;
+        Queue<Integer> que = new LinkedList<>(Arrays.stream(priorities).boxed().collect(Collectors.toList()));
+
+        for(int i=0; i<priorities.length; i++) {
+            int process = que.poll();
+            for(int j=0; j<que.poll(); j++) {
+                int compare = que.poll();
+                if(compare > process) que.offer(compare);
+                if(compare < process) que.offer(compare); que.offer(process);
+            }
+        }
+
+        return answer;
+    }
 
     public int mySolution01(int[] priorities, int location) {
         int answer = 0;
         Queue<Integer> que = new LinkedList<>(Arrays.stream(priorities).boxed().collect(Collectors.toList()));
+
         for(int i=0; i<que.size(); i++) {
             int num = que.poll();
             int max = que.stream().max(Integer::compare).get();
             if(max > num) que.offer(num);
-            else if(max < num || location == i) answer++;
+            else if(max <= num) answer++;
+            if(location == i) break;
         }
         return answer;
     }
